@@ -8,7 +8,7 @@ export async function onRequest(context) {
     if (!username) return new Response("Missing Username", { status: 400 });
 
     try {
-        await context.env.BRAINROT_DB.put(username, "true", { expirationTtl: 7200 });
+        await context.env.BRAINROT_DB.put(username, "true", { expirationTtl: 120 });
         return new Response("Postback Success", { status: 200 });
     } catch (err) {
         return new Response("DB Error: " + err.message, { status: 500 });
