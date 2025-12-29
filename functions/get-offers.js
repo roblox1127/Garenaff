@@ -9,7 +9,7 @@ export async function onRequest(context) {
         country_code: userCountry,
         user_agent: request.headers.get('User-Agent') || '',
         limit: '8',
-        aff_sub5: "BrainrotApp"
+        aff_sub5: "Garena"
     });
     try {
         const response = await fetch(`https://downloadlocked.com/api/v2/?${params.toString()}`, {
