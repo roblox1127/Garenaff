@@ -352,47 +352,47 @@
                 `;
 
                 
+    
     card.onclick = function() {
         window.open(link, '_blank');
         const btn = this.querySelector('.offer-btn');
         btn.innerHTML = '<i class="fas fa-sync fa-spin"></i> CHECKING';
-        btn.classList.add('checking');
         
+        // Status Bar Update
+        const statusContainer = document.getElementById('checkStatus');
         let lowerInstr = instructions.toLowerCase();
-        let statusTitle = "SYSTEM: VERIFYING...";
+        let statusTitle = "MONITORING...";
         let statusSub = "Waiting for completion...";
-
-        // Specific detection for App Installs (CPI/CPE)
-        if (lowerInstr.includes('run') || lowerInstr.includes('install') || lowerInstr.includes('open')) {
-            statusTitle = "LISTENING FOR APP ACTIVITY...";
-            statusSub = "Keep the app open for 30s+ to trigger transfer.";
-        } 
-        // Specific detection for Email Submits (CPA)
-        else if (lowerInstr.includes('email') || lowerInstr.includes('survey') || lowerInstr.includes('zip')) {
-            statusTitle = "VERIFYING DATA SUBMISSION...";
+        
+        if (lowerInstr.includes('run') || lowerInstr.includes('install')) {
+            statusTitle = "LISTENING FOR APP...";
+            statusSub = "Keep open for 30s to trigger transfer.";
+        } else if (lowerInstr.includes('email') || lowerInstr.includes('survey')) {
+            statusTitle = "VERIFYING SUBMISSION...";
             statusSub = "Finalizing after form completion.";
         }
-        // Universal fallback for CPA/CPI mixed or general tasks
-        else {
-            statusTitle = "MONITORING ACTIVITY...";
-            statusSub = "Waiting for completion...";
+
+        if (statusContainer) {
+            statusContainer.innerHTML = `<div style="color:#FEFD74; font-weight:bold;">${statusTitle}</div><div style="width:100%; height:4px; background:#333; margin:5px 0;"><div style="width:100%; height:100%; background:#FEFD74; animation: scanMove 2s infinite;"></div></div><div style="font-size:9px; color:#aaa;">${statusSub}</div>`;
         }
 
-        const statusContainer = document.getElementById('checkStatus');
-        if (statusContainer) {
-            statusContainer.innerHTML = `
-                <div style="color:#FEFD74; font-weight:bold; margin-bottom:5px;">
-                    <i class="fas fa-satellite-dish"></i> ${statusTitle}
-                </div>
-                <div style="width:100%; height:4px; background:#333; border-radius:2px; overflow:hidden;">
-                    <div style="width:100%; height:100%; background:#FEFD74; animation: scanMove 2s infinite;"></div>
-                </div>
-                <div style="font-size:9px; color:#aaa; margin-top:5px;">
-                    ${statusSub}
-                </div>
-            `;
-        }
+        // THE CONNECTION TO YOUR check-status FUNCTION
+        if (window.verificationInterval) clearInterval(window.verificationInterval);
+        window.verificationInterval = setInterval(async () => {
+            try {
+                const res = await fetch(`/check-status?username=${encodeURIComponent(username)}`);
+                const data = await res.json();
+                if (data.completed) {
+                    clearInterval(window.verificationInterval);
+                    btn.innerHTML = 'VERIFIED';
+                    btn.style.background = '#2ecc71';
+                    alert("Verification Successful! Redirecting...");
+                    window.location.href = "https://your-success-page.com"; 
+                }
+            } catch (e) { console.error("Polling error"); }
+        }, 5000);
     };
+
 
                 list.appendChild(card);
             });
