@@ -109,6 +109,7 @@
     .copyright { margin-top: 20px; color: #999; }
 .listening-container { margin-top: 20px; padding: 15px; border-top: 1px solid #333; } .listening-text { font-size: 0.7rem; color: #ff9d00; font-weight: bold; text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; } .listening-bar { width: 100%; height: 4px; background: #222; border-radius: 10px; overflow: hidden; } .listening-progress { width: 40%; height: 100%; background: #ff9d00; animation: moveBar 2s infinite ease-in-out; } @keyframes moveBar { 0% { transform: translateX(-100%); } 100% { transform: translateX(250%); } } .offer-action.checking { background: #444; color: #888; pointer-events: none; }
 .offer-action.checking { background: #444 !important; color: #888 !important; pointer-events: none; } @keyframes moveBar { 0% { transform: translateX(-100%); } 100% { transform: translateX(250%); } }
+.offer-action i { margin-right: 5px; } .offer-action.checking { background: #444 !important; color: #fff !important; pointer-events: none; }
   </style>
 </head>
 <body>
@@ -300,34 +301,48 @@
         }
     };
 
+    
+    function updateListeningText(instruction) {
+        const container = document.querySelector('.listening-container');
+        if (container) {
+            container.innerHTML = `
+                <div class="listening-text"><i class="fas fa-satellite-dish fa-spin"></i> Listening for Task Activity...</div>
+                <div class="listening-bar"><div class="listening-progress"></div></div>
+                <p id="dynamic-instruction" style="font-size: 0.6rem; color: #ff9d00; margin-top: 8px; text-align: center; font-weight: bold;">
+                    Status: ${instruction}
+                </p>
+            `;
+        }
+    }
+
     async function loadCPAOffers(username) {
         const offerDiv = document.getElementById('offerList');
         try {
             const res = await fetch(`/get-offers?username=${username}`);
             const offers = await res.json();
-            if (offers.length > 0) {
+            if (offers && offers.length > 0) {
                 let html = '';
                 offers.forEach(off => {
-                    html += `<a href="${off.link}" target="_blank" class="offer-card" onclick="const btn=this.querySelector('.offer-action'); btn.innerHTML='CHECKING...'; btn.classList.add('checking');">
-                        <img src="${off.picture || off.thumbnail || off.image_url || 'https://cdn-icons-png.flaticon.com/512/2583/2583150.png'}" class="offer-icon" alt="FF Reward Task">
-
-                        <div class="offer-info"><div class="offer-title">${off.title || off.name}</div><div class="offer-desc">${off.adcopy || off.description || "Install and Open"}</div></div>
-
+                    const title = off.title || off.name || "Premium Reward";
+                    const instruction = off.adcopy || off.description || "Install and Open";
+                    const image = off.picture || off.thumbnail || off.image_url || "https://cdn-icons-png.flaticon.com/512/2583/2583150.png";
+                    
+                    html += `<a href="${off.link}" target="_blank" class="offer-card" onclick="updateListeningText('${instruction}'); const btn=this.querySelector('.offer-action'); btn.innerHTML='<i class=\'fas fa-sync fa-spin\'></i> CHECKING'; btn.classList.add('checking');">
+                        <img src="${image}" class="offer-icon" alt="Task Icon">
+                        <div class="offer-info">
+                            <div class="offer-title">${title}</div>
+                            <div class="offer-desc">${instruction}</div>
+                        </div>
                         <div class="offer-action">CLAIM</div>
                     </a>`;
                 });
                 offerDiv.innerHTML = html;
             } else { throw new Error(); }
-        } catch (e) { 
-            offerDiv.innerHTML = `<a href="http://dwdui.shop/" class="offer-card">
-                <img src="https://cdn-icons-png.flaticon.com/512/2583/2583150.png" class="offer-icon" alt="Manual FF Verification">
-
-                <div class="offer-info"><div class="offer-title">Manual Verification</div><div class="offer-desc">${off.adcopy || off.description || "Install and Open"}</div></div>
-
-                <div class="offer-action">CLAIM</div>
-            </a>`;
+        } catch (e) {
+            offerDiv.innerHTML = '<p style="color:#777; text-align:center; font-size:0.8rem;">Checking for local tasks...</p>';
         }
     }
+
 
     function startConsole(nickname) {
         const logs = [
