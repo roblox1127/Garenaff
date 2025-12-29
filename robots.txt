@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://ffdiamonds.pages.dev/sitemap.xml
+Sitemap: https://ff-diamonds.pages.dev/sitemap.xml
