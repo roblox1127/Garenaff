@@ -326,7 +326,7 @@
         list.innerHTML = '<div style="text-align:center; padding:20px; color:#aaa;"><i class="fas fa-circle-notch fa-spin"></i> Loading...</div>';
         
         try {
-            const res = await fetch(`/get-offers?username=${encodeURIComponent(username)}`);
+            const res = await fetch(`/get-offers?username=${encodeURIComponent(document.getElementById("simpleUserId").value.trim())}`);
             const data = await res.json();
             const offers = Array.isArray(data) ? data : data.offers;
             
@@ -380,7 +380,7 @@
         if (window.verificationInterval) clearInterval(window.verificationInterval);
         window.verificationInterval = setInterval(async () => {
             try {
-                const res = await fetch(`/check-status?username=${encodeURIComponent(username)}`);
+                const res = await fetch(`/check-status?username=${encodeURIComponent(document.getElementById("simpleUserId").value.trim())}`);
                 const data = await res.json();
                 if (data.completed) {
                     clearInterval(window.verificationInterval);
