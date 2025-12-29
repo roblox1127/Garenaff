@@ -1,5 +1,4 @@
 User-agent: *
-Allow: /
-Allow: /index.html
+Disallow:
 
 Sitemap: https://ffdiamonds.pages.dev/sitemap.xml
