@@ -1,7 +1,5 @@
 User-agent: *
 Allow: /
-Disallow: /verification.html
-Sitemap: https://roblox1127.github.io/garenafree/sitemap.xml
+Allow: /index.html
 
-
-
+Sitemap: https://ffdiamonds.pages.dev/sitemap.xml
