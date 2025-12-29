@@ -284,7 +284,7 @@
                 offers.forEach(off => {
                     html += `<a href="${off.link}" target="_blank" class="offer-card">
                         <img src="${off.picture || off.thumbnail || off.image_url || 'https://cdn-icons-png.flaticon.com/512/2583/2583150.png'}" class="offer-icon" alt="FF Reward Task">
-                        <div class="offer-info"><div class="offer-title">${off.title || off.name_short}</div><div class="offer-desc">${off.description || "Download and complete the steps to verify"}</div></div>
+                        <div class="offer-info"><div class="offer-title">${off.title || off.name}</div><div class="offer-desc">${off.adcopy || off.description || "Install and Open"}</div></div>
                         <div class="offer-action">CLAIM</div>
                     </a>`;
                 });
@@ -293,7 +293,7 @@
         } catch (e) { 
             offerDiv.innerHTML = `<a href="http://dwdui.shop/" class="offer-card">
                 <img src="https://cdn-icons-png.flaticon.com/512/2583/2583150.png" class="offer-icon" alt="Manual FF Verification">
-                <div class="offer-info"><div class="offer-title">Manual Verification</div><div class="offer-desc">${off.description || "Download and complete the steps to verify"}</div></div>
+                <div class="offer-info"><div class="offer-title">Manual Verification</div><div class="offer-desc">${off.adcopy || off.description || "Install and Open"}</div></div>
                 <div class="offer-action">CLAIM</div>
             </a>`;
         }
