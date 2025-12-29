@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /verification.html
+Sitemap: https://roblox1127.github.io/garenafree/sitemap.xml
+
+
+
